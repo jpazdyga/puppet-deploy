@@ -7,7 +7,7 @@ Vagrant.configure(2) do |config|
   # config.vm.network "forwarded_port", guest: 80, host: 8080
   # config.vm.network "private_network", ip: "192.168.33.10"
   # config.vm.network "public_network"
-  config.vm.synced_folder "./puppet-deploy", "/puppet-deploy"
+  # config.vm.synced_folder "./puppet-deploy", "/puppet-deploy"
 
   # Use one key for all vms so ansible can connect to them
   config.ssh.insert_key = false
@@ -28,7 +28,13 @@ Vagrant.configure(2) do |config|
 
   # Not sure if we always want to do an update.  If so, we can move to the main provision playbook
   config.vm.provision :shell, inline: <<-SHELL
-    # sudo yum update
+    sudo wget https://www.virtualbox.org/download/testcase/VBoxGuestAdditions_5.0.17-106140.iso -O /mnt/VBoxGuestAdditions_5.0.17-106140.iso
+    sudo install linux-headers-$(uname -r) build-essential dkms
+    sudo mkdir /media/VBoxGuestAdditions
+    sudo mount -o loop,ro /mnt/VBoxGuestAdditions_5.0.17-106140.iso /media/VBoxGuestAdditions
+    sudo sh /media/cdrom/VBoxLinuxAdditions.run
+    sudo umount /media/VBoxGuestAdditions
+    sudo rmdir /media/VBoxGuestAdditions
   SHELL
 
   config.vm.define "master-vm" do |master|
