@@ -4,15 +4,7 @@
 $shell = <<SHELL
   yum -y install ruby wget bind-utils
   output=`gem list --local puppet | grep puppet > /dev/null; echo $?`; if [ "$output" -eq "1" ]; then gem install puppet; fi
-  echo "Defaults:vagrant !requiretty" >> /etc/sudoers
-  whereis puppet
   ln -s /usr/local/bin/puppet /usr/bin/puppet
-  puppet resource group puppet ensure=present
-  puppet resource user puppet ensure=present gid=puppet shell='/sbin/nologin'
-  puppet resource package puppet ensure=latest provider=gem
-  mkdir -p /etc/puppet
-  touch /etc/puppet/puppet.conf
-  wget https://raw.githubusercontent.com/puppetlabs/puppet/3.7.5/conf/auth.conf -O /etc/puppet/auth.conf
 SHELL
 
 
