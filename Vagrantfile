@@ -1,6 +1,21 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+
+$shell = <<SHELL
+  sudo wget https://www.virtualbox.org/download/testcase/VBoxGuestAdditions_5.0.17-106140.iso -O /mnt/VBoxGuestAdditions_5.0.17-106140.iso
+  sudo install linux-headers-$(uname -r) build-essential dkms
+  sudo mkdir /media/VBoxGuestAdditions
+  sudo mount -o loop,ro /mnt/VBoxGuestAdditions_5.0.17-106140.iso /media/VBoxGuestAdditions
+  sudo sh /media/cdrom/VBoxLinuxAdditions.run --nox11
+  sudo /etc/init.d/vboxadd setup
+  sudo chkconfig --add vboxadd
+  sudo chkconfig vboxadd on
+  sudo umount /media/VBoxGuestAdditions
+  sudo rmdir /media/VBoxGuestAdditions
+SHELL
+
+
 Vagrant.configure(2) do |config|
   config.vm.box_check_update = false
 
@@ -13,9 +28,9 @@ Vagrant.configure(2) do |config|
   config.ssh.insert_key = false
 
   # Need to disable vbguest updating for this  box as it has an old kernel so vbguest won't compile
-  if Vagrant.has_plugin?("vbguest") or Vagrant.has_plugin?("vagrant-vbguest")
-    config.vbguest.auto_update = false
-  end
+  #if Vagrant.has_plugin?("vbguest") or Vagrant.has_plugin?("vagrant-vbguest")
+  #  config.vbguest.auto_update = false
+  #end
 
   config.vm.provider :virtualbox do |vb|
     # Display the VirtualBox GUI when booting the machine
@@ -26,16 +41,7 @@ Vagrant.configure(2) do |config|
     vb.cpus = 1
   end
 
-  # Not sure if we always want to do an update.  If so, we can move to the main provision playbook
-  config.vm.provision :shell, inline: <<-SHELL
-    sudo wget https://www.virtualbox.org/download/testcase/VBoxGuestAdditions_5.0.17-106140.iso -O /mnt/VBoxGuestAdditions_5.0.17-106140.iso
-    sudo install linux-headers-$(uname -r) build-essential dkms
-    sudo mkdir /media/VBoxGuestAdditions
-    sudo mount -o loop,ro /mnt/VBoxGuestAdditions_5.0.17-106140.iso /media/VBoxGuestAdditions
-    sudo sh /media/cdrom/VBoxLinuxAdditions.run
-    sudo umount /media/VBoxGuestAdditions
-    sudo rmdir /media/VBoxGuestAdditions
-  SHELL
+  config.vm.provision :shell, inline: $shell
 
   config.vm.define "master-vm" do |master|
     master.vm.box = "centos/7"
