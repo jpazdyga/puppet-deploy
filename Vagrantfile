@@ -62,7 +62,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "web-vm" do |web|
-    web.vm.box = "centos/7"
+    web.vm.box = "jhcook/centos7"
     web.vm.provision :puppet do |puppet|
       web.vm.hostname = "web-vm"
       web.vm.network :private_network, ip: "10.1.1.11"
@@ -89,7 +89,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "db-vm" do |db|
-    db.vm.box = "centos/7"
+    db.vm.box = "jhcook/centos7"
     db.vm.provision :puppet do |puppet|
       db.vm.hostname = "db-vm"
       db.vm.network :private_network, ip: "10.1.1.12"
