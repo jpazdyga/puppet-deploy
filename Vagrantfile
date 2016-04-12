@@ -52,7 +52,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "web-vm" do |web|
     web.vm.box = "centos/7"
-    web.vm.provision :ansible do |ansible|
+    web.vm.provision :puppet do |puppet|
       web.vm.hostname = "web-vm"
       web.vm.network :private_network, ip: "10.1.1.11"
 
@@ -72,7 +72,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "db-vm" do |db|
     db.vm.box = "centos/7"
-    db.vm.provision :ansible do |ansible|
+    db.vm.provision :puppet do |puppet|
       db.vm.hostname = "db-vm"
       db.vm.network :private_network, ip: "10.1.1.12"
 
