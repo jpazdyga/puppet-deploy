@@ -1,18 +1,18 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-
 $shell = <<SHELL
-  sudo wget https://www.virtualbox.org/download/testcase/VBoxGuestAdditions_5.0.17-106140.iso -O /mnt/VBoxGuestAdditions_5.0.17-106140.iso
-  sudo install linux-headers-$(uname -r) build-essential dkms
-  sudo mkdir /media/VBoxGuestAdditions
-  sudo mount -o loop,ro /mnt/VBoxGuestAdditions_5.0.17-106140.iso /media/VBoxGuestAdditions
-  sudo sh /media/cdrom/VBoxLinuxAdditions.run --nox11
-  sudo /etc/init.d/vboxadd setup
-  sudo chkconfig --add vboxadd
-  sudo chkconfig vboxadd on
-  sudo umount /media/VBoxGuestAdditions
-  sudo rmdir /media/VBoxGuestAdditions
+  yum -y install ruby wget bind-utils
+  output=`gem list --local puppet | grep puppet > /dev/null; echo $?`; if [ "$output" -eq "1" ]; then gem install puppet; fi
+  echo "Defaults:vagrant !requiretty" >> /etc/sudoers
+  whereis puppet
+  ln -s /usr/local/bin/puppet /usr/bin/puppet
+  puppet resource group puppet ensure=present
+  puppet resource user puppet ensure=present gid=puppet shell='/sbin/nologin'
+  puppet resource package puppet ensure=latest provider=gem
+  mkdir -p /etc/puppet
+  touch /etc/puppet/puppet.conf
+  wget https://raw.githubusercontent.com/puppetlabs/puppet/3.7.5/conf/auth.conf -O /etc/puppet/auth.conf
 SHELL
 
 
@@ -37,11 +37,11 @@ Vagrant.configure(2) do |config|
     vb.gui = false
 
     # Customize the amount of memory on the VM:
-    vb.memory = 1024
-    vb.cpus = 1
+    vb.memory = 2048
+    vb.cpus = 2
   end
 
-#  config.vm.provision :shell, inline: $shell
+  config.vm.provision :shell, inline: $shell
 
   config.vm.define "master-vm" do |master|
     master.vm.box = "jhcook/centos7"
@@ -49,15 +49,22 @@ Vagrant.configure(2) do |config|
       master.vm.hostname = "master-vm"
       master.vm.network :private_network, ip: "10.1.1.10"
 
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
+#      Puppet version < 4
+#      puppet.manifests_path = "manifests"
+#      puppet.manifest_file = "init.pp"
+#      puppet.module_path = "modules"
+#      puppet.working_directory = "/puppet-deploy"
+
+#     Puppet version > 4
+      puppet.environment_path = "environments"
+      puppet.environment = "devel"
+
+#     Universal
       puppet.facter = {
         "version" => "1"
       }
       puppet.hiera_config_path = "hiera.yaml"
-      puppet.working_directory = "/puppet-deploy"
-      puppet.options = "--verbose"
+      puppet.options = "--verbose --debug"
 
     end
   end
@@ -68,15 +75,22 @@ Vagrant.configure(2) do |config|
       web.vm.hostname = "web-vm"
       web.vm.network :private_network, ip: "10.1.1.11"
 
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
+#      Puppet version < 4
+#      puppet.manifests_path = "manifests"
+#      puppet.manifest_file = "init.pp"
+#      puppet.module_path = "modules"
+#      puppet.working_directory = "/puppet-deploy"
+
+#     Puppet version > 4
+      puppet.environment_path = "environments"
+      puppet.environment = "devel"
+
+#     Universal
       puppet.facter = {
         "version" => "1"
       }
       puppet.hiera_config_path = "hiera.yaml"
-      puppet.working_directory = "/puppet-deploy"
-      puppet.options = "--verbose"
+      puppet.options = "--verbose --debug"
 
       web.vm.network "forwarded_port", guest: 80, host: 1080
     end
@@ -88,15 +102,22 @@ Vagrant.configure(2) do |config|
       db.vm.hostname = "db-vm"
       db.vm.network :private_network, ip: "10.1.1.12"
 
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
+#      Puppet version < 4
+#      puppet.manifests_path = "manifests"
+#      puppet.manifest_file = "init.pp"
+#      puppet.module_path = "modules"
+#      puppet.working_directory = "/puppet-deploy"
+
+#     Puppet version > 4
+      puppet.environment_path = "environments"
+      puppet.environment = "devel"
+
+#     Univesal
       puppet.facter = {
         "version" => "1"
       }
       puppet.hiera_config_path = "hiera.yaml"
-      puppet.working_directory = "/puppet-deploy"
-      puppet.options = "--verbose"
+      puppet.options = "--verbose --debug"
 
       db.vm.network "forwarded_port", guest: 3306, host: 13306
     end
