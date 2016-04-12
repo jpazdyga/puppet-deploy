@@ -42,9 +42,9 @@ Vagrant.configure(2) do |config|
       master.vm.network :private_network, ip: "10.1.1.10"
 
 #      Puppet version < 4
-      puppet.manifests_path = "environments/devel/manifests"
+      puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
-      puppet.module_path = "environments/devel/modules"
+      puppet.module_path = "modules"
 #      puppet.working_directory = "/puppet-deploy"
 
 #     Puppet version > 4
@@ -68,9 +68,9 @@ Vagrant.configure(2) do |config|
       web.vm.network :private_network, ip: "10.1.1.11"
 
 #      Puppet version < 4
-      puppet.manifests_path = "environments/devel/manifests"
+      puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
-      puppet.module_path = "environments/devel/modules"
+      puppet.module_path = "modules"
 #      puppet.working_directory = "/puppet-deploy"
 
 #     Puppet version > 4
@@ -95,9 +95,9 @@ Vagrant.configure(2) do |config|
       db.vm.network :private_network, ip: "10.1.1.12"
 
 #      Puppet version < 4
-      puppet.manifests_path = "environments/devel/manifests"
+      puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
-      puppet.module_path = "environments/devel/modules"
+      puppet.module_path = "modules"
 #      puppet.working_directory = "/puppet-deploy"
 
 #     Puppet version > 4

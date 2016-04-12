@@ -1,13 +1,13 @@
 node default { }
 
-node 'master' {
+node 'master-vm' {
   include master
 }
 
-node 'web' {
+node 'web-vm' {
   include web
 }
 
-node 'db' {
+node 'db-vm' {
   include db
 }
