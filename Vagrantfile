@@ -41,10 +41,10 @@ Vagrant.configure(2) do |config|
     vb.cpus = 1
   end
 
-  config.vm.provision :shell, inline: $shell
+#  config.vm.provision :shell, inline: $shell
 
   config.vm.define "master-vm" do |master|
-    master.vm.box = "centos/7"
+    master.vm.box = "jhcook/centos7"
     master.vm.provision :puppet do |puppet|
       master.vm.hostname = "master-vm"
       master.vm.network :private_network, ip: "10.1.1.10"
