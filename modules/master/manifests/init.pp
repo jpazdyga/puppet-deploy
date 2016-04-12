@@ -16,6 +16,10 @@ class master {
     require => Exec["puppet-nonca-master"],
   }
 
+  service { "firewalld":
+    ensure => stopped,
+  }
+
   file { "/etc/puppet/manifests/site.pp":
     source => "puppet:///modules/master/site.pp",
   }

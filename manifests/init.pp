@@ -1,4 +1,6 @@
-node default { }
+node default {
+  include agent::puppet-agent
+}
 
 node 'master-vm' {
   include master
@@ -9,5 +11,6 @@ node 'web-vm' {
 }
 
 node 'db-vm' {
+  include agent::puppet-agent
   include db
 }
