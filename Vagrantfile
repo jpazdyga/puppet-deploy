@@ -3,7 +3,7 @@
 
 $shell = <<SHELL
   rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
-  yum -y install ruby wget bind-utils puppet augeas
+  yum -y install ruby wget bind-utils puppet augeas hiera
   if [ -z /usr/bin/puppet ]; then ln -s /usr/local/bin/puppet /usr/bin/puppet; fi
 SHELL
 
@@ -29,7 +29,7 @@ Vagrant.configure(2) do |config|
     vb.gui = false
 
     # Customize the amount of memory on the VM:
-    vb.memory = 2048
+    vb.memory = 2348
     vb.cpus = 2
   end
 
@@ -58,6 +58,7 @@ Vagrant.configure(2) do |config|
       puppet.hiera_config_path = "hiera.yaml"
       puppet.options = "--verbose --debug"
 
+      master.vm.network "forwarded_port", guest: 8140, host: 8140
     end
   end
 
