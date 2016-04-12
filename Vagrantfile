@@ -2,9 +2,9 @@
 # vi: set ft=ruby :
 
 $shell = <<SHELL
-  yum -y install ruby wget bind-utils
-  output=`gem list --local puppet | grep puppet > /dev/null; echo $?`; if [ "$output" -eq "1" ]; then gem install puppet; fi
-  ln -s /usr/local/bin/puppet /usr/bin/puppet
+  rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
+  yum -y install ruby wget bind-utils puppet augeas
+  if [ -z /usr/bin/puppet ]; then ln -s /usr/local/bin/puppet /usr/bin/puppet; fi
 SHELL
 
 
@@ -42,14 +42,14 @@ Vagrant.configure(2) do |config|
       master.vm.network :private_network, ip: "10.1.1.10"
 
 #      Puppet version < 4
-#      puppet.manifests_path = "manifests"
-#      puppet.manifest_file = "init.pp"
-#      puppet.module_path = "modules"
+      puppet.manifests_path = "environments/devel/manifests"
+      puppet.manifest_file = "init.pp"
+      puppet.module_path = "environments/devel/modules"
 #      puppet.working_directory = "/puppet-deploy"
 
 #     Puppet version > 4
-      puppet.environment_path = "environments"
-      puppet.environment = "devel"
+#      puppet.environment_path = "environments"
+#      puppet.environment = "devel"
 
 #     Universal
       puppet.facter = {
@@ -68,14 +68,14 @@ Vagrant.configure(2) do |config|
       web.vm.network :private_network, ip: "10.1.1.11"
 
 #      Puppet version < 4
-#      puppet.manifests_path = "manifests"
-#      puppet.manifest_file = "init.pp"
-#      puppet.module_path = "modules"
+      puppet.manifests_path = "environments/devel/manifests"
+      puppet.manifest_file = "init.pp"
+      puppet.module_path = "environments/devel/modules"
 #      puppet.working_directory = "/puppet-deploy"
 
 #     Puppet version > 4
-      puppet.environment_path = "environments"
-      puppet.environment = "devel"
+#      puppet.environment_path = "environments"
+#      puppet.environment = "devel"
 
 #     Universal
       puppet.facter = {
@@ -84,7 +84,7 @@ Vagrant.configure(2) do |config|
       puppet.hiera_config_path = "hiera.yaml"
       puppet.options = "--verbose --debug"
 
-      web.vm.network "forwarded_port", guest: 80, host: 1080
+      web.vm.network "forwarded_port", guest: 80, host: 10080
     end
   end
 
@@ -95,14 +95,14 @@ Vagrant.configure(2) do |config|
       db.vm.network :private_network, ip: "10.1.1.12"
 
 #      Puppet version < 4
-#      puppet.manifests_path = "manifests"
-#      puppet.manifest_file = "init.pp"
-#      puppet.module_path = "modules"
+      puppet.manifests_path = "environments/devel/manifests"
+      puppet.manifest_file = "init.pp"
+      puppet.module_path = "environments/devel/modules"
 #      puppet.working_directory = "/puppet-deploy"
 
 #     Puppet version > 4
-      puppet.environment_path = "environments"
-      puppet.environment = "devel"
+#      puppet.environment_path = "environments"
+#      puppet.environment = "devel"
 
 #     Univesal
       puppet.facter = {

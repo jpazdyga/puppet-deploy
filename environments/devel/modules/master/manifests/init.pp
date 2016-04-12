@@ -1,12 +1,5 @@
-package { 'puppet':
+package { 'puppetserver':
   ensure => latest,
-  provider => gem,
-}
-
-#ln -s /usr/lib64/ruby/gems/2.1.0/gems/puppet-4.4.1/bin/puppet /usr/bin/puppet
-file { '/usr/bin/puppet':
-  ensure => link,
-  target => /usr/lib64/ruby/gems/2.1.0/gems/puppet-4.4.1/bin/puppet,
 }
 
 group { 'puppet':
@@ -27,11 +20,6 @@ file { '/etc/puppet':
 
 file { '/etc/puppet/puppet.conf':
   ensure => present, 
-}
-
-exec { 'fetch_auth.conf':
-  command => 'wget https://raw.githubusercontent.com/puppetlabs/puppet/3.7.5/conf/auth.conf -O /etc/puppet/auth.conf',
-  creates => /etc/puppet/auth.conf,
 }
 
 file { '/etc/puppet/auth.conf':
