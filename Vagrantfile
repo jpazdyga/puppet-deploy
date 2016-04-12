@@ -32,10 +32,10 @@ Vagrant.configure(2) do |config|
   SHELL
 
   config.vm.define "master-vm" do |master|
-    ts.vm.box = "centos/7"
-    ts.vm.provision :puppet do |puppet|
-      ts.vm.hostname = "master-vm"
-      ts.vm.network :private_network, ip: "10.1.1.10"
+    master.vm.box = "centos/7"
+    master.vm.provision :puppet do |puppet|
+      master.vm.hostname = "master-vm"
+      master.vm.network :private_network, ip: "10.1.1.10"
 
       puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
@@ -51,10 +51,10 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "web-vm" do |web|
-    db.vm.box = "centos/7"
-    db.vm.provision :ansible do |ansible|
-      db.vm.hostname = "web-vm"
-      db.vm.network :private_network, ip: "10.1.1.11"
+    web.vm.box = "centos/7"
+    web.vm.provision :ansible do |ansible|
+      web.vm.hostname = "web-vm"
+      web.vm.network :private_network, ip: "10.1.1.11"
 
       puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
@@ -66,15 +66,15 @@ Vagrant.configure(2) do |config|
       puppet.working_directory = "/puppet-deploy"
       puppet.options = "--verbose"
 
-      db.vm.network "forwarded_port", guest: 80, host: 1080
+      web.vm.network "forwarded_port", guest: 80, host: 1080
     end
   end
 
   config.vm.define "db-vm" do |db|
-    monitor.vm.box = "centos/7"
-    monitor.vm.provision :ansible do |ansible|
-      monitor.vm.hostname = "db-vm"
-      monitor.vm.network :private_network, ip: "10.1.1.12"
+    db.vm.box = "centos/7"
+    db.vm.provision :ansible do |ansible|
+      db.vm.hostname = "db-vm"
+      db.vm.network :private_network, ip: "10.1.1.12"
 
       puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
@@ -86,7 +86,7 @@ Vagrant.configure(2) do |config|
       puppet.working_directory = "/puppet-deploy"
       puppet.options = "--verbose"
 
-      monitor.vm.network "forwarded_port", guest: 3306, host: 13306
+      db.vm.network "forwarded_port", guest: 3306, host: 13306
     end
   end
 end
