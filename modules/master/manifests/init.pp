@@ -15,7 +15,7 @@ class master {
 
   exec { "update-puppet.conf":
 #    command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    dns_alt_names = puppet,puppet.example.com,puppetmaster01,puppetmaster01.example.com/g" /etc/puppet/puppet.conf',
-    command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    strict_variables = true/g" /etc/puppet/puppet.conf',
+    command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    strict_variables = true\n    certname = puppetmaster01.lascalia.com/g" /etc/puppet/puppet.conf',
     unless => "/usr/bin/grep dns_alt_names /etc/puppet/puppet.conf",
     require => File["/etc/puppet/puppet.conf"],
   }
