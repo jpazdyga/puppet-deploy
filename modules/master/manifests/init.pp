@@ -39,4 +39,8 @@ class master {
     ensure => stopped,
   }
 
+  exec { "revoke-cert":
+    command => "puppet cert clean puppetmaster01.lascalia.com",
+    require => Service["puppetserver"],
+  }
 }

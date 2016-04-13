@@ -27,8 +27,12 @@ class agent::puppet-agent {
     ensure => stopped,
   }
 
-  service { "puppet":
+  service { "puppet-agent":
     ensure => running,
   }
 
+  exec { "reset-cert":
+    exec => "find /var/lib/puppet/ssl -name puppetmaster01.lascalia.com.pem -delete",
+    notify => Service["puppet-agent"],
+  }
 }
