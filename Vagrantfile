@@ -7,6 +7,7 @@ $shell = <<SHELL
   if [ -z /usr/bin/puppet ]; then ln -s /usr/local/bin/puppet /usr/bin/puppet; fi
 SHELL
 
+$options = "--verbose"
 
 Vagrant.configure(2) do |config|
   config.vm.box_check_update = false
@@ -56,7 +57,7 @@ Vagrant.configure(2) do |config|
         "version" => "1"
       }
       puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = "--verbose --debug"
+      puppet.options = $options
 
       master.vm.network "forwarded_port", guest: 8140, host: 8140
     end
@@ -83,7 +84,7 @@ Vagrant.configure(2) do |config|
         "version" => "1"
       }
       puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = "--verbose --debug"
+      puppet.options = $options
 
       web.vm.network "forwarded_port", guest: 80, host: 10080
     end
@@ -110,7 +111,7 @@ Vagrant.configure(2) do |config|
         "version" => "1"
       }
       puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = "--verbose --debug"
+      puppet.options = $options
 
       db.vm.network "forwarded_port", guest: 3306, host: 13306
     end

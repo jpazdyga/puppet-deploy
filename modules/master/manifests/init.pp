@@ -5,6 +5,11 @@ class master {
     provider => yum,
   }
 
+  package { "git-all":
+    ensure => latest,
+    provider => yum,
+  }
+
   exec { "puppet-nonca-master":
     command => "/usr/bin/puppet cert generate puppetmaster01 --dns_alt_names=puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",
     require => Package["puppetserver"],
@@ -20,7 +25,4 @@ class master {
     ensure => stopped,
   }
 
-  file { "/etc/puppet/manifests/site.pp":
-    source => "puppet:///modules/master/site.pp",
-  }
 }
