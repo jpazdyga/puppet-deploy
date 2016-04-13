@@ -26,11 +26,11 @@ class master {
     require => Exec["update-puppet.conf"],
   }
 
-#  exec { "update-puppet.conf-2":
-#    command => '/usr/bin/echo -e "    manifest    = \$confdir/environments/\$environment/manifests/site.pp\n    manifestdir = \$confdir/environments/\$environment/manifests\n    modulepath  = \$confdir/environments/\$environment/modules:/usr/share/puppet/modules\n    templatedir = \$confdir/environments/\$environment/templates" >> /etc/puppet/puppet.conf',
-#    unless => '/usr/bin/grep "environment/modules" /etc/puppet/puppet.conf',
-#    require => Exec["update-puppet.conf-1"],
-#  }
+  exec { "update-puppet.conf-2":
+    command => '/usr/bin/echo -e "\n\n[prod]\n  manifest = /etc/puppet/environments/prod/manifests/site.pp\n  modulepath = /etc/puppet/environments/prod/modules\n  hieradata = /etc/puppet/environments/prod/hieradata\n[qa]\n  manifest = /etc/puppet/environments/qa/manifests/site.pp\n  modulepath = /etc/puppet/environments/qa/modules\n  hieradata = /etc/puppet/environments/qa/hieradata\n[dev]\n  manifest = /etc/puppet/environments/dev/manifests/site.pp\n  modulepath = /etc/puppet/environments/dev/modules\n  hieradata = /etc/puppet/environments/dev/hieradata" >> /etc/puppet/puppet.conf',
+    unless => '/usr/bin/grep "environments/qa" /etc/puppet/puppet.conf',
+    require => Exec["update-puppet.conf-1"],
+  }
 
   exec { "puppet-nonca-master":
     command => "/usr/bin/puppet cert generate puppetmaster01.lascalia.com --dns_alt_names=puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",
