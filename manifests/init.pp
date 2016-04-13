@@ -2,15 +2,6 @@ node default {
   include agent::puppet-agent
 }
 
-node 'master-vm' {
+node "puppetmaster01" {
   include master
-}
-
-node 'web-vm' {
-  include web
-}
-
-node 'db-vm' {
-  include agent::puppet-agent
-  include db
 }
