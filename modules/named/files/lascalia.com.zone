@@ -1,0 +1,23 @@
+$ORIGIN lascalia.com. 
+$TTL 86400 
+@	IN	SOA	dns.lascalia.com.	hostmaster.lascalia.com. (
+			2016041301 ; serial                     
+			21600      ; refresh after 6 hours                     
+			3600       ; retry after 1 hour                     
+			604800     ; expire after 1 week                     
+			86400 )    ; minimum TTL of 1 day  
+		     
+		           
+	IN	NS	dns.lascalia.com.       
+	
+	IN	MX	10	mail.lascalia.com.       
+
+	
+dns		IN	A	10.1.1.10
+puppetmaster01	IN	A	10.1.1.10
+prod01-web01    IN	A	10.1.1.11
+prod01-db01	IN	A	10.1.1.12
+qa01-web01	IN	A	10.1.2.11
+qa01-db01	IN	A	10.1.2.12
+dev01-web01	IN	A	10.1.3.11
+dev01-db01	IN	A	10.1.3.12

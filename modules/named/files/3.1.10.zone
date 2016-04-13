@@ -1,0 +1,13 @@
+$ORIGIN 3.1.10.in-addr.arpa.
+$TTL 86400
+@	IN	SOA	dns.lascalia.com.	hostmaster.lascalia.com. (
+			2016041301 ; serial
+			21600      ; refresh after 6 hours
+			3600       ; retry after 1 hour
+			604800     ; expire after 1 week
+			86400 )    ; minimum TTL of 1 day
+;
+@	IN	NS	dns.lascalia.com.
+;
+11	IN	PTR	dev01-web01.lascalia.com.
+12	IN	PTR	dev01-db01.lascalia.com.

@@ -1,6 +1,11 @@
 class agent::puppet-agent {
 
   case $fqdn {
+    /^puppetmaster01(.*)$/: {
+      file { "/etc/puppet/puppet.conf":
+        source => "puppet:///modules/agent/prod-puppet.conf",
+      }
+    }
     /^prod01(.*)$/: {
       file { "/etc/puppet/puppet.conf":
         source => "puppet:///modules/agent/prod-puppet.conf",
@@ -23,16 +28,21 @@ class agent::puppet-agent {
     group => root,
   }
 
+  file { "/etc/resolv.conf":
+    source => "puppet:///modules/agent/resolv.conf",
+    group => root,
+  }
+
   service { "firewalld":
     ensure => stopped,
   }
 
-  service { "puppet-agent":
+  service { "puppet":
     ensure => running,
   }
 
   exec { "reset-cert":
-    exec => "find /var/lib/puppet/ssl -name puppetmaster01.lascalia.com.pem -delete",
-    notify => Service["puppet-agent"],
+    command => '/usr/bin/find /var/lib/puppet/ssl -name puppetmaster01.lascalia.com.pem -delete',
+    notify => Service["puppet"],
   }
 }
