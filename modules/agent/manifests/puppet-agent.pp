@@ -27,7 +27,7 @@ class agent::puppet-agent {
     ensure => stopped,
   }
 
-  service ( "puppet":
+  service { "puppet":
     ensure => running,
   }
 

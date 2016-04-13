@@ -1,5 +1,5 @@
 node default {
-  include agent
+  include agent::puppet-agent
 }
 
 node "puppetmaster01" {
