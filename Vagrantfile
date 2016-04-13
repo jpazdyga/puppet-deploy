@@ -7,7 +7,7 @@ $shell = <<SHELL
   if [ -z /usr/bin/puppet ]; then ln -s /usr/local/bin/puppet /usr/bin/puppet; fi
 SHELL
 
-$options = "--verbose"
+$options = "--verbose --debug"
 
 Vagrant.configure(2) do |config|
   config.vm.box_check_update = false

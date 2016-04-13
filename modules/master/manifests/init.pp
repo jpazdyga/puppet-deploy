@@ -8,6 +8,7 @@ class master {
   package { "git-all":
     ensure => latest,
     provider => yum,
+    require => Exec["install-vcsrepo"],
   }
 
   exec { "puppet-nonca-master":
@@ -16,10 +17,17 @@ class master {
     creates => "/var/lib/puppet/ssl/certs/puppetmaster01.pem",
   }
 
-  exec { "vcsrepo-install":
-    command => "/usr/bin/puppet module install puppetlabs/vcsrepo",
-    require => Package["puppetserver"],
+  exec { "install-vcsrepo":
+    path => "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/vagrant/.local/bin:/home/vagrant/bin",
+    command => '/usr/bin/puppet module install puppetlabs/vcsrepo',
     creates => "/etc/puppet/modules/vcsrepo",
+  }
+
+  vcsrepo { "/etc/puppet/environments":
+    ensure => present,
+    provider => git,
+    source => "https://github.com/jpazdyga/puppet-environments.git",
+    require => Exec["install-vcsrepo"],
   }
 
   service { "puppetserver":
@@ -30,7 +38,5 @@ class master {
   service { "firewalld":
     ensure => stopped,
   }
-
-include master::git
 
 }
