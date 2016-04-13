@@ -21,15 +21,21 @@ class master {
   }
 
   exec { "update-puppet.conf-1":
-    command => '/usr/bin/echo -e "\n[master]\n    dns_alt_names = puppetmaster01,puppetmaster01.lascalia.com,puppet,puppet.lascalia.com\n    reports = puppetdb\n    storeconfigs_backend = puppetdb\n    storeconfigs = true\n    environment_timeout = unlimited" >> /etc/puppet/puppet.conf',
+    command => '/usr/bin/echo -e "\n[master]\n    dns_alt_names = puppetmaster01.lascalia.com\n    reports = puppetdb\n    storeconfigs_backend = puppetdb\n    storeconfigs = true\n    environment_timeout = unlimited" >> /etc/puppet/puppet.conf',
     unless => "/usr/bin/grep dns_alt_names /etc/puppet/puppet.conf",
     require => Exec["update-puppet.conf"],
   }
 
+#  exec { "update-puppet.conf-2":
+#    command => '/usr/bin/echo -e "    manifest    = \$confdir/environments/\$environment/manifests/site.pp\n    manifestdir = \$confdir/environments/\$environment/manifests\n    modulepath  = \$confdir/environments/\$environment/modules:/usr/share/puppet/modules\n    templatedir = \$confdir/environments/\$environment/templates" >> /etc/puppet/puppet.conf',
+#    unless => '/usr/bin/grep "environment/modules" /etc/puppet/puppet.conf',
+#    require => Exec["update-puppet.conf-1"],
+#  }
+
   exec { "puppet-nonca-master":
     command => "/usr/bin/puppet cert generate puppetmaster01.lascalia.com --dns_alt_names=puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",
     require => Package["puppetserver"],
-    creates => "/var/lib/puppet/ssl/certs/puppetmaster01.lascalia.com",
+    creates => "/var/lib/puppet/ssl/certs/puppetmaster01.lascalia.com.pem",
   }
 
   file { "/etc/puppet/autosign.conf":
