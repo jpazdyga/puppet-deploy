@@ -1,11 +1,10 @@
 ---
 :backends:
   - yaml
-  - json
+
 :yaml:
-  :datadir: "/etc/puppet/environments/%{::environment}/hieradata"
-:json:
-  :datadir: "/etc/puppet/environments/%{::environment}/hieradata"
+  :datadir: "/etc/puppet/environments/%{environment}/hieradata"
+
 :hierarchy:
-  - "%{hostname}"
+  - "%{fqdn}"
   - common
