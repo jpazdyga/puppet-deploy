@@ -1,5 +1,14 @@
 class agent::puppet-agent {
 
+  exec { "ipv6-disable":
+    command => "sed -i 's/IPV6INIT=yes/IPV6INIT=no/g' /etc/sysconfig/network-scripts/ifcfg-enp0s3",
+    notify => Service["network"],
+  }
+ 
+  service { "network":
+    ensure => running,
+  }
+
   case $fqdn {
     /^puppetmaster01(.*)$/: {
       file { "/etc/puppet/puppet.conf":
@@ -26,6 +35,7 @@ class agent::puppet-agent {
   file { "/etc/hosts":
     source => "puppet:///modules/agent/hosts",
     group => root,
+    require => Exec["ipv6-disable"],
   }
 
   file { "/etc/resolv.conf":

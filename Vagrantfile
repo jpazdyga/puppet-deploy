@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 
 $shell = <<SHELL
+  cp -f /puppet-deploy/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
   rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
   yum -y install ruby wget bind-utils puppet augeas hiera
   if [ -z /usr/bin/puppet ]; then ln -s /usr/local/bin/puppet /usr/bin/puppet; fi
@@ -11,8 +12,8 @@ $options = "--verbose --debug"
 
 Vagrant.configure(2) do |config|
   config.vm.box_check_update = false
-
-  # config.vm.synced_folder "./puppet-deploy", "/puppet-deploy"
+  # config.vm.network "public_network"
+  config.vm.synced_folder "./puppet-deploy", "/puppet-deploy"
 
   config.ssh.insert_key = false
 
