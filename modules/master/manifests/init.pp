@@ -53,17 +53,17 @@ class master {
     require => File[ "/etc/puppetdb/conf.d/jetty.ini" ], 
   }
 
-  file { "/etc/puppetdb/ssl/jetty.key":
-    source => "puppet:///modules/master/jetty.key", 
-  }
+#  file { "/etc/puppetdb/ssl/jetty.key":
+#    source => "puppet:///modules/master/jetty.key", 
+#  }
 
-  file { "/etc/puppetdb/ssl/jetty.crt":
-    source => "puppet:///modules/master/jetty.crt",
-  }
+#  file { "/etc/puppetdb/ssl/jetty.crt":
+#    source => "puppet:///modules/master/jetty.crt",
+#  }
 
-  file { "/etc/puppetdb/ssl/cacert.pem":
-    source => "puppet:///modules/master/cacert.pem",
-  }
+#  file { "/etc/puppetdb/ssl/cacert.pem":
+#    source => "puppet:///modules/master/cacert.pem",
+#  }
 
 #  exec { "puppet-nonca-master":
 #    command => "/usr/bin/puppet master --verbose",
