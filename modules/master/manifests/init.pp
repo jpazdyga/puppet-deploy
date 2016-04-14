@@ -44,14 +44,14 @@ class master {
     source => "puppet:///modules/master/autosign.conf",
   }
 
-  file { "/etc/puppetdb/conf.d/jetty.ini":
-    source => "puppet:///modules/master/jetty.ini",
-  }
+#  file { "/etc/puppetdb/conf.d/jetty.ini":
+#    source => "puppet:///modules/master/jetty.ini",
+#  }
 
-  file { "/etc/puppetdb/ssl":
-    ensure => directory,
-    require => File[ "/etc/puppetdb/conf.d/jetty.ini" ], 
-  }
+#  file { "/etc/puppetdb/ssl":
+#    ensure => directory,
+#    require => File[ "/etc/puppetdb/conf.d/jetty.ini" ], 
+#  }
 
   file { "/etc/hiera.yaml":
     source => "puppet:///modules/master/hiera.yaml",
