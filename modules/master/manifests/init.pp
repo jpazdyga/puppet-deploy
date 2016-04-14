@@ -23,7 +23,7 @@ class master {
   }
 
   exec { "update-puppet.conf-1":
-    command => '/usr/bin/echo -e "\n[master]\n    dns_alt_names = puppetmaster01.lascalia.com\n    reports = puppetdb\n    storeconfigs_backend = puppetdb\n    storeconfigs = true\n    environment_timeout = unlimited" >> /etc/puppet/puppet.conf',
+    command => '/usr/bin/echo -e "\n[master]\n    dns_alt_names = puppetmaster01.lascalia.com\n#    reports = puppetdb\n#    storeconfigs_backend = puppetdb\n    storeconfigs = true\n    environment_timeout = unlimited" >> /etc/puppet/puppet.conf',
     unless => "/usr/bin/grep dns_alt_names /etc/puppet/puppet.conf",
     require => Exec["update-puppet.conf"],
   }
@@ -46,6 +46,23 @@ class master {
 
   file { "/etc/puppetdb/conf.d/jetty.ini":
     source => "puppet:///modules/master/jetty.ini",
+  }
+
+  file { "/etc/puppetdb/ssl":
+    ensure => directory,
+    require => File[ "/etc/puppetdb/conf.d/jetty.ini" ], 
+  }
+
+  file { "/etc/puppetdb/ssl/jetty.key":
+    source => "puppet:///modules/master/jetty.key", 
+  }
+
+  file { "/etc/puppetdb/ssl/jetty.crt":
+    source => "puppet:///modules/master/jetty.crt",
+  }
+
+  file { "/etc/puppetdb/ssl/cacert.pem":
+    source => "puppet:///modules/master/cacert.pem",
   }
 
 #  exec { "puppet-nonca-master":
