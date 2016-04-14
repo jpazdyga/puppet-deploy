@@ -7,5 +7,7 @@
 :json
   :datadir: /etc/puppet/environments/%{::environment}/hieradata
 :hierarchy:
+  - "node/%{::role}"
+  - "node/%{::environment}"
   - "node/%{::fqdn}"
   - common
