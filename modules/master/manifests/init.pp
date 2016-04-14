@@ -5,6 +5,7 @@ class master {
   package { "puppetserver":
     ensure => latest,
     provider => yum,
+    require => File["/etc/yum.conf"],
   }
 
   package { "git-all":
@@ -14,9 +15,8 @@ class master {
   }
 
   exec { "update-puppet.conf":
-#    command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    dns_alt_names = puppet,puppet.example.com,puppetmaster01,puppetmaster01.example.com/g" /etc/puppet/puppet.conf',
-    command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    strict_variables = true\n    certname = puppetmaster01.lascalia.com/g" /etc/puppet/puppet.conf',
-    unless => "/usr/bin/grep dns_alt_names /etc/puppet/puppet.conf",
+    command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    confdir = \/etc\/puppet\n    environmentpath = \$confdir\/environments\n    strict_variables = true\n    certname = puppetmaster01.lascalia.com/g" /etc/puppet/puppet.conf',
+    unless => "/usr/bin/grep environmentpath /etc/puppet/puppet.conf",
     require => File["/etc/puppet/puppet.conf"],
   }
 
@@ -26,11 +26,11 @@ class master {
     require => Exec["update-puppet.conf"],
   }
 
-  exec { "update-puppet.conf-2":
-    command => '/usr/bin/echo -e "\n\n[prod]\n  manifest = /etc/puppet/environments/prod/manifests/site.pp\n  modulepath = /etc/puppet/environments/prod/modules\n  hieradata = /etc/puppet/environments/prod/hieradata\n[qa]\n  manifest = /etc/puppet/environments/qa/manifests/site.pp\n  modulepath = /etc/puppet/environments/qa/modules\n  hieradata = /etc/puppet/environments/qa/hieradata\n[dev]\n  manifest = /etc/puppet/environments/dev/manifests/site.pp\n  modulepath = /etc/puppet/environments/dev/modules\n  hieradata = /etc/puppet/environments/dev/hieradata" >> /etc/puppet/puppet.conf',
-    unless => '/usr/bin/grep "environments/qa" /etc/puppet/puppet.conf',
-    require => Exec["update-puppet.conf-1"],
-  }
+#  exec { "update-puppet.conf-2":
+#    command => '/usr/bin/echo -e "\n\n[prod]\n  manifest = /etc/puppet/environments/prod/manifests/site.pp\n  modulepath = /etc/puppet/environments/prod/modules\n  hieradata = /etc/puppet/environments/prod/hieradata\n[qa]\n  manifest = /etc/puppet/environments/qa/manifests/site.pp\n  modulepath = /etc/puppet/environments/qa/modules\n  hieradata = /etc/puppet/environments/qa/hieradata\n[dev]\n  manifest = /etc/puppet/environments/dev/manifests/site.pp\n  modulepath = /etc/puppet/environments/dev/modules\n  hieradata = /etc/puppet/environments/dev/hieradata" >> /etc/puppet/puppet.conf',
+#    unless => '/usr/bin/grep "environments/qa" /etc/puppet/puppet.conf',
+#    require => Exec["update-puppet.conf-1"],
+#  }
 
   exec { "puppet-nonca-master":
     command => "/usr/bin/puppet cert generate puppetmaster01.lascalia.com --dns_alt_names=puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",

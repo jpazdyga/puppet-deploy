@@ -33,6 +33,17 @@ class agent::puppet-agent {
     group => root,
   }
 
+  file { "/etc/yum.conf":
+    source => "puppet:///modules/agent/yum.conf",
+    group => root,
+  }
+
+  exec { "update-puppet-agent.conf":
+    command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    confdir = \/etc\/puppet/g" /etc/puppet/puppet.conf',
+    unless => "/usr/bin/grep confdir /etc/puppet/puppet.conf",
+    require => File["/etc/puppet/puppet.conf"],
+  }
+
   service { "firewalld":
     ensure => stopped,
   }
@@ -41,8 +52,8 @@ class agent::puppet-agent {
     ensure => running,
   }
 
-  exec { "reset-cert":
-    command => '/usr/bin/find /var/lib/puppet/ssl -name puppetmaster01.lascalia.com.pem -delete',
-    notify => Service["puppet"],
-  }
+#  exec { "reset-cert":
+#    command => '/usr/bin/find /var/lib/puppet/ssl -name puppetmaster01.lascalia.com.pem -delete',
+#    notify => Service["puppet"],
+#  }
 }
