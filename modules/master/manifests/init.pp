@@ -2,7 +2,9 @@ class master {
 
   include agent::puppet-agent
 
-  package { "puppetserver":
+  $masterrpms = [ "puppetserver", "puppetdb", "puppetdb-terminus"]
+
+  package { $masterrpms:
     ensure => latest,
     provider => yum,
     require => File["/etc/yum.conf"],
@@ -33,7 +35,7 @@ class master {
 #  }
 
   exec { "puppet-nonca-master":
-    command => "/usr/bin/puppet cert generate puppetmaster01.lascalia.com --dns_alt_names=puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",
+    command => "/usr/bin/puppet cert generate puppetmaster01.lascalia.com --dns_alt_names=puppetdb,puppetdb.lascalia.com,puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",
     require => Package["puppetserver"],
     creates => "/var/lib/puppet/ssl/certs/puppetmaster01.lascalia.com.pem",
   }
@@ -65,6 +67,11 @@ class master {
     ensure => running,
     require => Exec["puppet-nonca-master"],
 #    require => Package["puppetserver"],
+  }
+
+  service { "puppetdb":
+    ensure => running,
+    require => Package[$masterrpms],
   }
 
 #  exec { "revoke-cert":
