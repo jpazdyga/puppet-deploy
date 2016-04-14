@@ -23,7 +23,7 @@ class master {
   }
 
   exec { "update-puppet.conf-1":
-    command => '/usr/bin/echo -e "\n[master]\n    dns_alt_names = puppetmaster01.lascalia.com\n#    reports = puppetdb\n#    storeconfigs_backend = puppetdb\n    storeconfigs = true\n    environment_timeout = unlimited" >> /etc/puppet/puppet.conf',
+    command => '/usr/bin/echo -e "\n[master]\n    dns_alt_names = puppetmaster01.lascalia.com\n#    reports = puppetdb\n#    storeconfigs_backend = puppetdb\n#    storeconfigs = true\n    environment_timeout = unlimited" >> /etc/puppet/puppet.conf',
     unless => "/usr/bin/grep dns_alt_names /etc/puppet/puppet.conf",
     require => Exec["update-puppet.conf"],
   }
@@ -51,6 +51,10 @@ class master {
   file { "/etc/puppetdb/ssl":
     ensure => directory,
     require => File[ "/etc/puppetdb/conf.d/jetty.ini" ], 
+  }
+
+  file { "/etc/hiera.yaml":
+    source => "puppet:///modules/master/hiera.yaml",
   }
 
 #  file { "/etc/puppetdb/ssl/jetty.key":
@@ -90,10 +94,10 @@ class master {
 #    require => Package["puppetserver"],
   }
 
-  service { "puppetdb":
-    ensure => running,
-    require => [ Service[puppetserver], File[ "/etc/puppetdb/conf.d/jetty.ini" ] ],
-  }
+#  service { "puppetdb":
+#    ensure => running,
+#    require => [ Service[puppetserver], File[ "/etc/puppetdb/conf.d/jetty.ini" ] ],
+#  }
 
 #  exec { "revoke-cert":
 #    command => "/usr/bin/puppet cert clean puppetmaster01.lascalia.com",

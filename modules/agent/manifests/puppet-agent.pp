@@ -15,17 +15,17 @@ class agent::puppet-agent {
         source => "puppet:///modules/agent/prod-puppet.conf",
       }
     }
-    /^prod01(.*)$/: {
+    /^(.*)bl6p(.*)$/: {
       file { "/etc/puppet/puppet.conf":
         source => "puppet:///modules/agent/prod-puppet.conf",
       }
     }
-    /^qa01(.*)$/: {
+    /^(.*)bl6q(.*)$/: {
       file { "/etc/puppet/puppet.conf":
         source => "puppet:///modules/agent/qa-puppet.conf",
       }
     }
-    /^dev01(.*)$/: {
+    /^(.*)bl6d(.*)$/: {
       file { "/etc/puppet/puppet.conf":
         source => "puppet:///modules/agent/qa-puppet.conf",
       }
