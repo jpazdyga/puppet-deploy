@@ -36,12 +36,16 @@ class master {
 
   exec { "puppet-nonca-master":
     command => "/usr/bin/puppet cert generate puppetmaster01.lascalia.com --dns_alt_names=puppetdb,puppetdb.lascalia.com,puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",
-    require => Package["puppetserver"],
+    require => [ Package[ "puppetserver", "git-all" ], Vcsrepo["/etc/puppet/environments" ] ],
     creates => "/var/lib/puppet/ssl/certs/puppetmaster01.lascalia.com.pem",
   }
 
   file { "/etc/puppet/autosign.conf":
     source => "puppet:///modules/master/autosign.conf",
+  }
+
+  file { "/etc/puppetdb/conf.d/jetty.ini":
+    source => "puppet:///modules/master/jetty.ini",
   }
 
 #  exec { "puppet-nonca-master":
@@ -71,7 +75,7 @@ class master {
 
   service { "puppetdb":
     ensure => running,
-    require => Package[$masterrpms],
+    require => [ Service[puppetserver], File[ "/etc/puppetdb/conf.d/jetty.ini" ] ],
   }
 
 #  exec { "revoke-cert":
