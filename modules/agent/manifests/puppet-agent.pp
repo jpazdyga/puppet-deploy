@@ -35,7 +35,7 @@ class agent::puppet-agent {
   file { "/etc/hosts":
     source => "puppet:///modules/agent/hosts",
     group => root,
-    require => Exec["ipv6-disable"],
+#    require => Exec["ipv6-disable"],
   }
 
   file { "/etc/resolv.conf":
