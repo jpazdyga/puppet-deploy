@@ -1,13 +1,13 @@
 class agent::puppet-agent {
 
-  exec { "ipv6-disable":
-    command => "sed -i 's/IPV6INIT=yes/IPV6INIT=no/g' /etc/sysconfig/network-scripts/ifcfg-enp0s3",
-    notify => Service["network"],
-  }
+#  exec { "ipv6-disable":
+#    command => "sed -i 's/IPV6INIT=yes/IPV6INIT=no/g' /etc/sysconfig/network-scripts/ifcfg-enp0s3",
+#    notify => Service["network"],
+#  }
  
-  service { "network":
-    ensure => running,
-  }
+#  service { "network":
+#    ensure => running,
+#  }
 
   case $fqdn {
     /^puppetmaster01(.*)$/: {
