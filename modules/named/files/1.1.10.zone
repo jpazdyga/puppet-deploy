@@ -10,5 +10,6 @@ $TTL 86400
 @	IN	NS	dns.lascalia.com.
 ;
 10	IN	PTR	puppetmaster01.lascalia.com.
-11	IN	PTR	prod01-web01.lascalia.com.
-12	IN	PTR	prod01-db01.lascalia.com.
+11	IN	PTR	appbl6p.lascalia.com.
+12	IN	PTR	proxybl6p.lascalia.com.
+13	IN	PTR	commonbl6p.lascalia.com.

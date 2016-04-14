@@ -15,9 +15,12 @@ $TTL 86400
 	
 dns		IN	A	10.1.1.10
 puppetmaster01	IN	A	10.1.1.10
-prod01-web01    IN	A	10.1.1.11
-prod01-db01	IN	A	10.1.1.12
-qa01-web01	IN	A	10.1.2.11
-qa01-db01	IN	A	10.1.2.12
-dev01-web01	IN	A	10.1.3.11
-dev01-db01	IN	A	10.1.3.12
+appbl6p		IN	A	10.1.1.11
+proxybl6p	IN	A	10.1.1.12
+commonbl6p      IN      A       10.1.1.13
+appbl6q		IN	A	10.1.2.11
+proxybl6q	IN	A	10.1.2.12
+commonbl6q      IN      A       10.1.2.13
+appbl6d		IN	A	10.1.3.11
+proxybl6d	IN	A	10.1.3.12
+commonbl6d      IN      A       10.1.3.13

@@ -86,7 +86,7 @@ Vagrant.configure(2) do |config|
     db.vm.box = "jhcook/centos7"
     db.vm.provision :puppet do |puppet|
       db.vm.hostname = "commonbl6p"
-      db.vm.network :private_network, ip: "10.1.1.12"
+      db.vm.network :private_network, ip: "10.1.1.13"
 
       puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
@@ -143,7 +143,7 @@ Vagrant.configure(2) do |config|
     db.vm.box = "jhcook/centos7"
     db.vm.provision :puppet do |puppet|
       db.vm.hostname = "commonbl6q"
-      db.vm.network :private_network, ip: "10.1.1.12"
+      db.vm.network :private_network, ip: "10.1.1.13"
 
       puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
@@ -200,7 +200,7 @@ Vagrant.configure(2) do |config|
     db.vm.box = "jhcook/centos7"
     db.vm.provision :puppet do |puppet|
       db.vm.hostname = "commonbl6d"
-      db.vm.network :private_network, ip: "10.1.3.11"
+      db.vm.network :private_network, ip: "10.1.3.13"
 
       puppet.manifests_path = "manifests"
       puppet.manifest_file = "init.pp"
