@@ -6,6 +6,15 @@ node "puppetmaster01" {
   include master
 }
 
-node "prod01-web01" {
+node /^app(.*)$/ {
   include agent::puppet-agent
 }
+
+node /^proxy(.*)$/ {
+  include agent::puppet-agent
+}
+
+node /^common(.*)$/ {
+  include agent::puppet-agent
+}
+
