@@ -37,22 +37,22 @@ class agent::puppet-agent {
   case $fqdn {
     /^puppetmaster01(.*)$/: {
       file { "/etc/facter/facts.d/role.txt":
-        source => "puppet:///modules/base/role.txt",
+        source => "puppet:///modules/agent/role.txt",
       }
     }
     /^app(.*)$/: {
       file { "/etc/facter/facts.d/role.txt":
-        source => "puppet:///modules/base/role-app.txt",
+        source => "puppet:///modules/agent/role-app.txt",
       }
     }
     /^proxy(.*)$/: {
       file { "/etc/facter/facts.d/role.txt":
-        source => "puppet:///modules/base/role-proxy.txt",
+        source => "puppet:///modules/agent/role-proxy.txt",
       }
     }
     /^common(.*)$/: {
       file { "/etc/facter/facts.d/role.txt":
-        source => "puppet:///modules/base/role-common.txt",
+        source => "puppet:///modules/agent/role-common.txt",
       }
     }
   }
