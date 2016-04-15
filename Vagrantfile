@@ -2,6 +2,8 @@
 # vi: set ft=ruby :
 
 $shell = <<SHELL
+  sed -i 's/enforcing/permissive/g' /etc/selinux/config
+  setenforce 0
   cp -f /puppet-deploy/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
   rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
   yum -y install ruby wget bind-utils puppet augeas hiera

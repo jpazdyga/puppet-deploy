@@ -1,3 +1,0 @@
-class { 'selinux':
- mode => 'permissive'
-}

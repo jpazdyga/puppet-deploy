@@ -1,8 +1,14 @@
 class master {
 
+### Deploy basic puppet config
+#
   include agent::puppet-agent
 
+### This is required for puppetdb
 #  $masterrpms = [ "puppetserver", "puppetdb", "puppetdb-terminus"]
+
+### As we are not deploing puppetdb for now, we'll use only puppetserver
+#
   $masterrpms = [ "puppetserver" ]
 
   package { $masterrpms:
@@ -11,12 +17,16 @@ class master {
     require => File["/etc/yum.conf"],
   }
 
+### This is required to pull the puppet code to be distributed when whole environment will be set up
+#
   package { "git":
     ensure => latest,
     provider => yum,
     require => Exec["install-vcsrepo"],
   }
 
+### Add puppet master specific configuration to the basic one
+#
   exec { "update-puppet.conf":
     command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    confdir = \/etc\/puppet\n    environmentpath = \$confdir\/environments\n    strict_variables = true\n    certname = puppetmaster01.lascalia.com/g" /etc/puppet/puppet.conf',
     unless => "/usr/bin/grep environmentpath /etc/puppet/puppet.conf",
@@ -29,12 +39,6 @@ class master {
     require => Exec["update-puppet.conf"],
   }
 
-#  exec { "update-puppet.conf-2":
-#    command => '/usr/bin/echo -e "\n\n[prod]\n  manifest = /etc/puppet/environments/prod/manifests/site.pp\n  modulepath = /etc/puppet/environments/prod/modules\n  hieradata = /etc/puppet/environments/prod/hieradata\n[qa]\n  manifest = /etc/puppet/environments/qa/manifests/site.pp\n  modulepath = /etc/puppet/environments/qa/modules\n  hieradata = /etc/puppet/environments/qa/hieradata\n[dev]\n  manifest = /etc/puppet/environments/dev/manifests/site.pp\n  modulepath = /etc/puppet/environments/dev/modules\n  hieradata = /etc/puppet/environments/dev/hieradata" >> /etc/puppet/puppet.conf',
-#    unless => '/usr/bin/grep "environments/qa" /etc/puppet/puppet.conf',
-#    require => Exec["update-puppet.conf-1"],
-#  }
-
   exec { "puppet-nonca-master":
     command => "/usr/bin/puppet cert generate puppetmaster01.lascalia.com --dns_alt_names=puppetdb,puppetdb.lascalia.com,puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",
     require => [ Package[ "puppetserver", "git" ], Vcsrepo["/etc/puppet/environments" ] ],
@@ -45,6 +49,8 @@ class master {
     source => "puppet:///modules/master/autosign.conf",
   }
 
+### Required for puppetdb
+#
 #  file { "/etc/puppetdb/conf.d/jetty.ini":
 #    source => "puppet:///modules/master/jetty.ini",
 #  }
@@ -53,15 +59,6 @@ class master {
 #    ensure => directory,
 #    require => File[ "/etc/puppetdb/conf.d/jetty.ini" ], 
 #  }
-
-  file { "/etc/hiera.yaml":
-    source => "puppet:///modules/master/hiera.yaml",
-  }
-
-  file { "/etc/puppet/hiera.yaml":
-    ensure => link,
-    target => "/etc/hiera.yaml",
-  }
 
 #  file { "/etc/puppetdb/ssl/jetty.key":
 #    source => "puppet:///modules/master/jetty.key", 
@@ -75,24 +72,32 @@ class master {
 #    source => "puppet:///modules/master/cacert.pem",
 #  }
 
-#  exec { "puppet-nonca-master":
-#    command => "/usr/bin/puppet master --verbose",
-#    require => Package["puppetserver"],
-#    creates => "/var/lib/puppet/ssl/certs/puppetmaster01.lascalia.com.pem",
+#  service { "puppetdb":
+#    ensure => running,
+#    require => [ Service[puppetserver], File[ "/etc/puppetdb/conf.d/jetty.ini" ] ],
 #  }
 
-  exec { "install-selinux":
-    path => "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/vagrant/.local/bin:/home/vagrant/bin",
-    command => '/usr/bin/puppet module install spiette/selinux',
-    creates => "/etc/puppet/modules/selinux",
+### Hiera configuration file
+#
+  file { "/etc/hiera.yaml":
+    source => "puppet:///modules/master/hiera.yaml",
   }
 
+  file { "/etc/puppet/hiera.yaml":
+    ensure => link,
+    target => "/etc/hiera.yaml",
+  }
+
+### Install vcs module, required to use pull and push from control version systems
+#
   exec { "install-vcsrepo":
     path => "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/vagrant/.local/bin:/home/vagrant/bin",
     command => '/usr/bin/puppet module install puppetlabs/vcsrepo',
     creates => "/etc/puppet/modules/vcsrepo",
   }
 
+### Clone the puppet code from the git repo
+#
   vcsrepo { "/etc/puppet/environments":
     ensure => present,
     provider => git,
@@ -100,22 +105,15 @@ class master {
     require => Exec["install-vcsrepo"],
   }
 
+### Start the puppet server after certificates been created
+#
   service { "puppetserver":
     ensure => running,
     require => Exec["puppet-nonca-master"],
-#    require => Package["puppetserver"],
   }
 
-#  service { "puppetdb":
-#    ensure => running,
-#    require => [ Service[puppetserver], File[ "/etc/puppetdb/conf.d/jetty.ini" ] ],
-#  }
-
-#  exec { "revoke-cert":
-#    command => "/usr/bin/puppet cert clean puppetmaster01.lascalia.com",
-#    require => Service["puppetserver"],
-#  }
-
+### Deploy DNS server to puppet master ###
+#
   include named
-  include selinux
+
 }
