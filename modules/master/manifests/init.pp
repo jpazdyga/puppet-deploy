@@ -117,5 +117,5 @@ class master {
 #  }
 
   include named
-  include master::selinux
+  include selinux
 }
