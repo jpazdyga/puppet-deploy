@@ -2,7 +2,8 @@ class master {
 
   include agent::puppet-agent
 
-  $masterrpms = [ "puppetserver", "puppetdb", "puppetdb-terminus"]
+#  $masterrpms = [ "puppetserver", "puppetdb", "puppetdb-terminus"]
+  $masterrpms = [ "puppetserver" ]
 
   package { $masterrpms:
     ensure => latest,
@@ -10,7 +11,7 @@ class master {
     require => File["/etc/yum.conf"],
   }
 
-  package { "git-all":
+  package { "git":
     ensure => latest,
     provider => yum,
     require => Exec["install-vcsrepo"],
@@ -36,7 +37,7 @@ class master {
 
   exec { "puppet-nonca-master":
     command => "/usr/bin/puppet cert generate puppetmaster01.lascalia.com --dns_alt_names=puppetdb,puppetdb.lascalia.com,puppet,puppet.lascalia.com,puppetmaster01,puppetmaster01.lascalia.com",
-    require => [ Package[ "puppetserver", "git-all" ], Vcsrepo["/etc/puppet/environments" ] ],
+    require => [ Package[ "puppetserver", "git" ], Vcsrepo["/etc/puppet/environments" ] ],
     creates => "/var/lib/puppet/ssl/certs/puppetmaster01.lascalia.com.pem",
   }
 
@@ -55,6 +56,11 @@ class master {
 
   file { "/etc/hiera.yaml":
     source => "puppet:///modules/master/hiera.yaml",
+  }
+
+  file { "/etc/puppet/hiera.yaml":
+    ensure => link,
+    target => "/etc/hiera.yaml",
   }
 
 #  file { "/etc/puppetdb/ssl/jetty.key":

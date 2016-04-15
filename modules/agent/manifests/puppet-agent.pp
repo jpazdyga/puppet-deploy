@@ -1,13 +1,15 @@
 class agent::puppet-agent {
 
-#  exec { "ipv6-disable":
-#    command => "sed -i 's/IPV6INIT=yes/IPV6INIT=no/g' /etc/sysconfig/network-scripts/ifcfg-enp0s3",
-#    notify => Service["network"],
-#  }
- 
-#  service { "network":
-#    ensure => running,
-#  }
+  file { "/etc/facter/":
+    ensure => directory,
+  }
+
+  file { "/etc/facter/facts.d/":
+    ensure => directory,
+    require => File[ "/etc/facter/" ],
+  }
+
+### Assign the proper puppet.conf. It relies on FQDN, but could be amended according to needs.
 
   case $fqdn {
     /^puppetmaster01(.*)$/: {
@@ -32,10 +34,32 @@ class agent::puppet-agent {
     }
   }
 
+  case $fqdn {
+    /^puppetmaster01(.*)$/: {
+      file { "/etc/facter/facts.d/role.txt":
+        source => "puppet:///modules/base/role.txt",
+      }
+    }
+    /^app(.*)$/: {
+      file { "/etc/facter/facts.d/role.txt":
+        source => "puppet:///modules/base/role-app.txt",
+      }
+    }
+    /^proxy(.*)$/: {
+      file { "/etc/facter/facts.d/role.txt":
+        source => "puppet:///modules/base/role-proxy.txt",
+      }
+    }
+    /^common(.*)$/: {
+      file { "/etc/facter/facts.d/role.txt":
+        source => "puppet:///modules/base/role-common.txt",
+      }
+    }
+  }
+
   file { "/etc/hosts":
     source => "puppet:///modules/agent/hosts",
     group => root,
-#    require => Exec["ipv6-disable"],
   }
 
   file { "/etc/resolv.conf":
