@@ -88,6 +88,25 @@ class master {
     target => "/etc/hiera.yaml",
   }
 
+### Hiera directory structure - this is provided from git repo, leaving here just in case
+#
+
+#  file { "/etc/puppet/environments/production/hieradata/":
+#    ensure => directory,
+#  }
+
+#  file { "/etc/puppet/environments/production/hieradata/production":
+#    ensure => directory,
+#  }
+
+#  file { "/etc/puppet/environments/production/hieradata/production":
+#    ensure => directory,
+#  }
+
+#  file { "/etc/puppet/environments/production/hieradata/production":
+#    ensure => directory,
+#  }
+
 ### Install vcs module, required to use pull and push from control version systems
 #
   exec { "install-vcsrepo":
