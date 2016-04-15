@@ -1,3 +1,3 @@
 class master::selinux {
-  mode => 'permissive'
+  mode => "permissive",
 }
