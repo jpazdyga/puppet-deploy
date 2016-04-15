@@ -61,7 +61,7 @@ Vagrant.configure(2) do |config|
       puppet.hiera_config_path = "hiera.yaml"
       puppet.options = $options
 
-      web.vm.network "forwarded_port", guest: 80, host: 10080
+      web.vm.network "forwarded_port", guest: 8088, host: 18088
     end
   end
 
@@ -100,120 +100,6 @@ Vagrant.configure(2) do |config|
       puppet.options = $options
 
       db.vm.network "forwarded_port", guest: 3306, host: 13306
-    end
-  end
-
-  config.vm.define "appbl6q" do |web|
-    web.vm.box = "jhcook/centos7"
-    web.vm.provision :puppet do |puppet|
-      web.vm.hostname = "appbl6q"
-      web.vm.network :private_network, ip: "10.1.2.11"
-
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
-      puppet.facter = {
-        "version" => "1"
-      }
-      puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = $options
-
-      web.vm.network "forwarded_port", guest: 80, host: 20080
-    end
-  end
-
-  config.vm.define "proxybl6q" do |proxy|
-    proxy.vm.box = "jhcook/centos7"
-    proxy.vm.provision :puppet do |puppet|
-      proxy.vm.hostname = "proxybl6q"
-      proxy.vm.network :private_network, ip: "10.1.2.12"
-
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
-      puppet.facter = {
-        "version" => "1"
-      }
-      puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = $options
-
-      proxy.vm.network "forwarded_port", guest: 3128, host: 23128
-    end
-  end
-
-  config.vm.define "commonbl6q" do |db|
-    db.vm.box = "jhcook/centos7"
-    db.vm.provision :puppet do |puppet|
-      db.vm.hostname = "commonbl6q"
-      db.vm.network :private_network, ip: "10.1.1.13"
-
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
-      puppet.facter = {
-        "version" => "1"
-      }
-      puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = $options
-
-      db.vm.network "forwarded_port", guest: 3306, host: 13306
-    end
-  end
-
-  config.vm.define "appbl6d" do |web|
-    web.vm.box = "jhcook/centos7"
-    web.vm.provision :puppet do |puppet|
-      web.vm.hostname = "appbl6d"
-      web.vm.network :private_network, ip: "10.1.3.11"
-
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
-      puppet.facter = {
-        "version" => "1"
-      }
-      puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = $options
-
-      web.vm.network "forwarded_port", guest: 80, host: 30080
-    end
-  end
-
-  config.vm.define "proxybl6d" do |proxy|
-    proxy.vm.box = "jhcook/centos7"
-    proxy.vm.provision :puppet do |puppet|
-      proxy.vm.hostname = "proxybl6d"
-      proxy.vm.network :private_network, ip: "10.1.3.12"
-
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
-      puppet.facter = {
-        "version" => "1"
-      }
-      puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = $options
-
-      proxy.vm.network "forwarded_port", guest: 3128, host: 33128
-    end
-  end
-
-  config.vm.define "commonbl6d" do |db|
-    db.vm.box = "jhcook/centos7"
-    db.vm.provision :puppet do |puppet|
-      db.vm.hostname = "commonbl6d"
-      db.vm.network :private_network, ip: "10.1.3.13"
-
-      puppet.manifests_path = "manifests"
-      puppet.manifest_file = "init.pp"
-      puppet.module_path = "modules"
-      puppet.facter = {
-        "version" => "1"
-      }
-      puppet.hiera_config_path = "hiera.yaml"
-      puppet.options = $options
-
-      db.vm.network "forwarded_port", guest: 3306, host: 33306
     end
   end
 end
