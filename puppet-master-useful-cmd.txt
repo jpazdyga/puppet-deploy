@@ -1,0 +1,1 @@
+puppet master --compile appbl6p.lascalia.com --environment=prod --debug |grep hiera
