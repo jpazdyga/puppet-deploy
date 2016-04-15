@@ -81,6 +81,12 @@ class master {
 #    creates => "/var/lib/puppet/ssl/certs/puppetmaster01.lascalia.com.pem",
 #  }
 
+  exec { "install-selinux":
+    path => "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/vagrant/.local/bin:/home/vagrant/bin",
+    command => '/usr/bin/puppet module install spiette/selinux',
+    creates => "/etc/puppet/modules/selinux",
+  }
+
   exec { "install-vcsrepo":
     path => "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/vagrant/.local/bin:/home/vagrant/bin",
     command => '/usr/bin/puppet module install puppetlabs/vcsrepo',
