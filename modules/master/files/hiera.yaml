@@ -3,7 +3,7 @@
   - yaml
 
 :yaml:
-  :datadir: "/etc/puppet/environments/%{environment}/hieradata"
+  :datadir: "/etc/puppet/environments/production/hieradata"
 
 :hierarchy:
   - "%{environment}/%{role}"
