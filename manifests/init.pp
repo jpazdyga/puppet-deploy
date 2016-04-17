@@ -1,5 +1,7 @@
+### Different configs can be applied here to hosts using it's name
+#
 node default {
-  include agent::puppet-agent
+  include agent
 }
 
 node "puppetmaster01" {
@@ -7,14 +9,14 @@ node "puppetmaster01" {
 }
 
 node /^app(.*)$/ {
-  include agent::puppet-agent
+  include agent
 }
 
 node /^proxy(.*)$/ {
-  include agent::puppet-agent
+  include agent
 }
 
 node /^common(.*)$/ {
-  include agent::puppet-agent
+  include agent
 }
 

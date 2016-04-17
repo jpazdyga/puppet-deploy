@@ -1,4 +1,7 @@
-class agent::puppet-agent {
+class agent::configure {
+
+### Make sure that facter dirs are in place
+#
 
   file { "/etc/facter/":
     ensure => directory,
@@ -10,7 +13,7 @@ class agent::puppet-agent {
   }
 
 ### Assign the proper puppet.conf. It relies on FQDN, but could be amended according to needs.
-
+#
   case $fqdn {
     /^puppetmaster01(.*)$/: {
       file { "/etc/puppet/puppet.conf":
@@ -33,6 +36,9 @@ class agent::puppet-agent {
       }
     }
   }
+
+### Set initial role fact. This is used only once.
+#
 
   case $fqdn {
     /^puppetmaster01(.*)$/: {
@@ -67,25 +73,24 @@ class agent::puppet-agent {
     group => root,
   }
 
+### Using it as workaround when rpm repos mirror lookup fails
+#
+
   file { "/etc/yum.conf":
     source => "puppet:///modules/agent/yum.conf",
     group => root,
   }
 
+### Add $confdir variable to puppet.conf, unless it's already there
+#
   exec { "update-puppet-agent.conf":
     command => '/usr/bin/sed -i "s/\[main\]/\[main\]\n    confdir = \/etc\/puppet/g" /etc/puppet/puppet.conf',
     unless => "/usr/bin/grep confdir /etc/puppet/puppet.conf",
     require => File["/etc/puppet/puppet.conf"],
   }
 
-  service { "firewalld":
-    ensure => stopped,
-  }
-
-  service { "puppet":
-    ensure => running,
-  }
-
+### Can be used to revoke the node certificate
+#
 #  exec { "reset-cert":
 #    command => '/usr/bin/find /var/lib/puppet/ssl -name puppetmaster01.lascalia.com.pem -delete',
 #    notify => Service["puppet"],
