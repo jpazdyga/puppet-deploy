@@ -1,1 +1,4 @@
 puppet master --compile appbl6p.lascalia.com --environment=prod --debug |grep hiera
+
+### Create the default manifests
+manifest="configure"; echo -e "class agent::$manifest {\n\n}" > modules/agent/manifests/$manifest.pp
