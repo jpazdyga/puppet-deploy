@@ -28,6 +28,12 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, inline: $shell
 
   config.vm.define "puppetmaster01" do |master|
+
+    config.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "5196"]
+      vb.customize ["modifyvm", :id, "--cpus", "4"]
+    end
+
     master.vm.box = "jhcook/centos7"
     master.vm.provision :puppet do |puppet|
       master.vm.hostname = "puppetmaster01"
