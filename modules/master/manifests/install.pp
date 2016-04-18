@@ -42,6 +42,14 @@ class master::install {
     require => Exec["install-vcsrepo"],
   }
 
+### Create the custom function on the Puppet Server
+#
+  file { "/etc/puppet/environments/production/modules/customfunct/lib/puppet/parser/functions/customfunct.rb":
+    source => "puppet:///modules/master/customfunct.rb",
+    group => root,
+    require => Vcsrepo["/etc/puppet/environments"],
+  }
+
 ### Deploy DNS server to puppet master ###
 #
   include named
